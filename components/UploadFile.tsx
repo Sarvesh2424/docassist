@@ -8,7 +8,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 const uploadFile = async (formData: FormData) => {
-  const response = await fetch("http://127.0.0.1:8000/upload", {
+  const response = await fetch("https://sarvesh-24-24-docassist.hf.space/upload", {
     body: formData,
     method: "POST",
   });
