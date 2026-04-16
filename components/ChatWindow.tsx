@@ -47,7 +47,14 @@ async function uploadToDB({
 function ChatWindow({ id }: { id: string }) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState("");
-  const { data: chat, isPending } = useQuery({
+  const [localChat, setLocalChat] = useState<
+    Array<{ human?: string; message?: string; ai?: string }>
+  >([]);
+  const {
+    data: chat,
+    isPending,
+    isSuccess,
+  } = useQuery({
     queryKey: ["chat"],
     queryFn: () => getChat({ id }),
   });
@@ -74,6 +81,7 @@ function ChatWindow({ id }: { id: string }) {
       toast.error("Cannot be empty");
       return;
     }
+    setLocalChat([...localChat, { human: message }]);
     prismaMutate({ chat: [...chat.chat, { human: message }], fileId: id });
     mutate({ query: message, file_id: id });
   };
@@ -81,6 +89,12 @@ function ChatWindow({ id }: { id: string }) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
+
+  useEffect(() => {
+    if (chat?.chat) {
+      setLocalChat(chat.chat);
+    }
+  }, [isSuccess]);
   return (
     <div className="text-white grow flex flex-col items-center justify-center items py-20 p-4">
       {isPending ? (
@@ -91,14 +105,14 @@ function ChatWindow({ id }: { id: string }) {
             {" "}
             {chat.title}
           </div>
-          {chat.chat.length == 0 ? (
+          {localChat.length == 0 ? (
             <p className="text-2xl">No messages found! Start your chat now!</p>
           ) : (
             <div className="w-2/3 flex flex-col gap-4 p-12 overflow-y-auto">
               {genAi ? (
                 <>
-                  {chat.chat.map(
-                    (message: { message: object }, idx: number) => (
+                  {localChat.map(
+                    (message: { human?: string; ai?: string }, idx: number) => (
                       <MessageBubble key={idx} message={message} />
                     ),
                   )}
@@ -106,8 +120,8 @@ function ChatWindow({ id }: { id: string }) {
                 </>
               ) : (
                 <>
-                  {chat.chat.map(
-                    (message: { message: object }, idx: number) => (
+                  {localChat.map(
+                    (message: { human?: string; ai?: string }, idx: number) => (
                       <MessageBubble key={idx} message={message} />
                     ),
                   )}
