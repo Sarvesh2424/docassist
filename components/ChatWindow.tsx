@@ -58,21 +58,15 @@ function ChatWindow({ id }: { id: string }) {
     queryKey: ["chat"],
     queryFn: () => getChat({ id }),
   });
-  const queryClient = useQueryClient();
   const router = useRouter();
   const { mutate: prismaMutate, isPending: prismaPending } = useMutation({
     mutationFn: uploadToDB,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["chat"],
-      });
-    },
   });
   const { mutate, isPending: genAi } = useMutation({
     mutationFn: sendMessage,
     onSuccess: (data) => {
+      setLocalChat([...localChat, data]);
       prismaMutate({ chat: [...chat.chat, data], fileId: id });
-      setMessage("");
     },
   });
 
@@ -81,6 +75,7 @@ function ChatWindow({ id }: { id: string }) {
       toast.error("Cannot be empty");
       return;
     }
+    setMessage("");
     setLocalChat([...localChat, { human: message }]);
     prismaMutate({ chat: [...chat.chat, { human: message }], fileId: id });
     mutate({ query: message, file_id: id });
@@ -88,7 +83,7 @@ function ChatWindow({ id }: { id: string }) {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chat]);
+  }, [localChat]);
 
   useEffect(() => {
     if (chat?.chat) {
