@@ -1,7 +1,9 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { Upload } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -16,6 +18,7 @@ const uploadFile = async (formData: FormData) => {
 const uploadToDB = async (fileData: {
   fileId: string;
   fileName: string | undefined;
+  userId: string | undefined;
 }) => {
   const response = await fetch("/api/upload", {
     method: "POST",
@@ -24,6 +27,8 @@ const uploadToDB = async (fileData: {
 };
 
 function UploadFile() {
+  const router = useRouter();
+  const session = authClient.useSession();
   const [file, setFile] = useState<File | null>(null);
   const { mutate: prismaMutate, isPending: prismaPending } = useMutation({
     mutationFn: uploadToDB,
@@ -32,8 +37,13 @@ function UploadFile() {
     mutationFn: uploadFile,
     onSuccess: (data) => {
       const fileId = data.file_id;
-      prismaMutate({ fileId, fileName: file?.name });
+      prismaMutate({
+        fileId,
+        fileName: file?.name,
+        userId: session.data?.user.id,
+      });
       setFile(null);
+      router.replace("/");
       toast.success("Uploaded file successfully");
     },
     onError: () => {
@@ -71,7 +81,7 @@ function UploadFile() {
               type="file"
             />
             {file ? (
-              <h2 className="absolute top-1/2 left-2">{file?.name}</h2>
+              <h2 className="absolute top-1/2 left-18">{file?.name}</h2>
             ) : (
               <>
                 <Upload className="absolute h-20 w-20 top-4 right-2/5" />
@@ -87,7 +97,7 @@ function UploadFile() {
               e.preventDefault();
               handleUpload();
             }}
-            className="p-2 bg-yellow-500 text-black rounded-lg"
+            className="p-2 bg-yellow-500 hover:bg-yellow-600 cursor-pointer transition-colors text-black rounded-lg"
           >
             Upload
           </button>

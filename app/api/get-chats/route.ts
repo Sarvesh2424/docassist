@@ -10,7 +10,11 @@ export async function GET(request: NextRequest) {
         id: id!,
       },
     });
-    return NextResponse.json({ chat: response?.chat, status: 200 });
+    return NextResponse.json({
+      chat: response?.chat,
+      title: response?.name,
+      status: 200,
+    });
   } catch (err) {
     return NextResponse.json({ message: "Error fetching documents" });
   }

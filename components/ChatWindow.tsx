@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Send, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import MessageBubble from "./MessageBubble";
 import BubbleSkeleton from "./BubbleSkeleton";
@@ -11,7 +11,7 @@ import BubbleSkeleton from "./BubbleSkeleton";
 async function getChat({ id }: { id: string }) {
   const response = await fetch(`/api/get-chats?id=${id}`);
   const data = await response.json();
-  return data.chat;
+  return data;
 }
 
 async function sendMessage({
@@ -45,6 +45,7 @@ async function uploadToDB({
 }
 
 function ChatWindow({ id }: { id: string }) {
+  const bottomRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState("");
   const { data: chat, isPending } = useQuery({
     queryKey: ["chat"],
@@ -63,7 +64,7 @@ function ChatWindow({ id }: { id: string }) {
   const { mutate, isPending: genAi } = useMutation({
     mutationFn: sendMessage,
     onSuccess: (data) => {
-      prismaMutate({ chat: [...chat, data], fileId: id });
+      prismaMutate({ chat: [...chat.chat, data], fileId: id });
       setMessage("");
     },
   });
@@ -73,36 +74,44 @@ function ChatWindow({ id }: { id: string }) {
       toast.error("Cannot be empty");
       return;
     }
-    prismaMutate({ chat: [...chat, { human: message }], fileId: id });
+    prismaMutate({ chat: [...chat.chat, { human: message }], fileId: id });
     mutate({ query: message, file_id: id });
   };
 
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat]);
   return (
     <div className="text-white grow flex flex-col items-center justify-center items py-20 p-4">
-      <div className="fixed top-0 p-2 bg-white rounded-b-2xl text-black text-2xl min-w-1/3 text-center shadow-2xl shadow-black">
-        {" "}
-        Title
-      </div>
       {isPending ? (
         <p>Loading</p>
       ) : (
         <>
-          {chat.length == 0 ? (
+          <div className="fixed top-0 p-2 bg-white rounded-b-2xl text-black text-2xl min-w-2/3 text-center shadow-2xl shadow-black">
+            {" "}
+            {chat.title}
+          </div>
+          {chat.chat.length == 0 ? (
             <p className="text-2xl">No messages found! Start your chat now!</p>
           ) : (
             <div className="w-2/3 flex flex-col gap-4 p-12 overflow-y-auto">
               {genAi ? (
                 <>
-                  {chat.map((message: { message: object }, idx: number) => (
-                    <MessageBubble key={idx} message={message} />
-                  ))}
+                  {chat.chat.map(
+                    (message: { message: object }, idx: number) => (
+                      <MessageBubble key={idx} message={message} />
+                    ),
+                  )}
                   <BubbleSkeleton />
                 </>
               ) : (
                 <>
-                  {chat.map((message: { message: object }, idx: number) => (
-                    <MessageBubble key={idx} message={message} />
-                  ))}
+                  {chat.chat.map(
+                    (message: { message: object }, idx: number) => (
+                      <MessageBubble key={idx} message={message} />
+                    ),
+                  )}
+                  <div ref={bottomRef} />
                 </>
               )}
             </div>

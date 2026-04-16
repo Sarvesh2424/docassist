@@ -15,7 +15,7 @@ function DocumentCard({
 }) {
   const router = useRouter();
   return (
-    <div className="bg-yellow-500 p-2 rounded-lg  text-lg flex flex-col gap-4">
+    <div className="bg-white p-2 rounded-lg  text-lg flex flex-col gap-4">
       {name}
       <p>{dayjs(date).fromNow()}</p>
       <button
@@ -23,7 +23,7 @@ function DocumentCard({
           e.preventDefault();
           router.replace(`/chat/${id}`);
         }}
-        className="bg-green-500 text-white p-2 rounded-lg"
+        className="bg-yellow-500 hover:bg-yellow-600 cursor-pointer transition-colors  p-2 rounded-lg"
       >
         Chat
       </button>

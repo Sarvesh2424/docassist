@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    let { fileId, fileName } = await request.json();
+    let { fileId, fileName, userId } = await request.json();
     if (!fileName) {
       fileName = "New document";
     }
@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
       data: {
         id: fileId,
         name: fileName,
+        userId: userId,
       },
     });
     return NextResponse.json({
