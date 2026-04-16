@@ -38,6 +38,13 @@ async function uploadToDB({
   chat: Array<object>;
   fileId: string;
 }) {
+  console.log(chat);
+  // if (Object.keys(chat)[0] == "ai") {
+  //   console.log("ai upload");
+  // }
+  // else{
+  //   console.log("human upload")
+  // }
   const response = await fetch("/api/send-message", {
     method: "PUT",
     body: JSON.stringify({ chat, id: fileId }),
@@ -47,6 +54,7 @@ async function uploadToDB({
 function ChatWindow({ id }: { id: string }) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState("");
+  const [dummy, setDummy] = useState("");
   const [localChat, setLocalChat] = useState<
     Array<{ human?: string; message?: string; ai?: string }>
   >([]);
@@ -62,11 +70,19 @@ function ChatWindow({ id }: { id: string }) {
   const { mutate: prismaMutate, isPending: prismaPending } = useMutation({
     mutationFn: uploadToDB,
   });
-  const { mutate, isPending: genAi } = useMutation({
+  const {
+    mutate,
+    isPending: genAi,
+    data,
+  } = useMutation({
     mutationFn: sendMessage,
     onSuccess: (data) => {
       setLocalChat([...localChat, data]);
-      prismaMutate({ chat: [...chat.chat, data], fileId: id });
+      prismaMutate({
+        chat: [...chat.chat, { human: dummy }, data],
+        fileId: id,
+      });
+      setDummy("");
     },
   });
 
@@ -75,10 +91,12 @@ function ChatWindow({ id }: { id: string }) {
       toast.error("Cannot be empty");
       return;
     }
+    setDummy(message);
     setMessage("");
     setLocalChat([...localChat, { human: message }]);
     prismaMutate({ chat: [...chat.chat, { human: message }], fileId: id });
     mutate({ query: message, file_id: id });
+    console.log("data:" + data);
   };
 
   useEffect(() => {
@@ -112,6 +130,7 @@ function ChatWindow({ id }: { id: string }) {
                     ),
                   )}
                   <BubbleSkeleton />
+                  <div ref={bottomRef} />
                 </>
               ) : (
                 <>
