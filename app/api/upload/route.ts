@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
         id: fileId,
         name: fileName,
         userId: userId,
+        uploadedAt: new Date(),
       },
     });
     return NextResponse.json({

@@ -9,7 +9,7 @@ import DocumentCardSkeleton from "./DocumentCardSkeleton";
 type Document = {
   id: string;
   name: string;
-  date: Date;
+  uploadedAt: Date;
 };
 
 const getDocuments = async ({ id }: { id: string | undefined }) => {
@@ -37,14 +37,17 @@ function DocumentsList() {
               No documents found! Start uploading a PDF!
             </p>
           ) : (
-            documents.map((document: Document) => (
-              <DocumentCard
-                key={document.id}
-                name={document.name}
-                date={document.date}
-                id={document.id}
-              />
-            ))
+            documents.map((document: Document) => {
+              console.log(document.uploadedAt);
+              return (
+                <DocumentCard
+                  key={document.id}
+                  name={document.name}
+                  date={document.uploadedAt}
+                  id={document.id}
+                />
+              );
+            })
           )}
         </>
       )}
