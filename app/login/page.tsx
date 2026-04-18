@@ -23,7 +23,7 @@ async function Login() {
             </p>
           </div>
         </div>
-        <div className="bg-white flex flex-col items-center justify-center md:w-1/2 md:min-h-screen h-2/3">
+        <div className="bg-white flex grow flex-col min-h-max items-center justify-center md:w-1/2 md:min-h-screen h-full">
           <LoginForm />
         </div>
       </div>

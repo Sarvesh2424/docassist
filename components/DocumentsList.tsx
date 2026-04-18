@@ -1,9 +1,9 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import DocumentCard from "./DocumentCard";
 import { authClient } from "@/lib/auth-client";
-import { Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import DocumentCard from "./DocumentCard";
 import DocumentCardSkeleton from "./DocumentCardSkeleton";
 
 type Document = {

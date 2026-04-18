@@ -12,7 +12,7 @@ async function Chat({ params }: { params: { id: string } }) {
     redirect("/login");
   }
   const { id } = await params;
-  
+
   return (
     <>
       <Toaster position="bottom-right" />

@@ -8,14 +8,13 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
 function RegisterForm() {
   const { data: session, isPending } = authClient.useSession();
   const [registerState, dispatch] = useReducer(registerReducer, {
     email: "",
     password: "",
     confirm: "",
+    error: { email: "", password: "", confirm: "" },
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -88,34 +87,43 @@ function RegisterForm() {
         <div className="rounded-full animate-spin w-10 h-10 border-2 border-l-0 border-black"></div>
       ) : (
         <>
-          <h1 className="text-black text-3xl">Register</h1>
+          <h1 className="text-black text-3xl uppercase font-black">Register</h1>
           <form className="flex flex-col w-1/2 items-center justify-center text-black mt-12 gap-2">
-            <label className="w-full text-left">Email</label>
+            <label className="w-full font-medium text-left">Email</label>
             <div className="w-full">
               <input
-                onChange={(e) =>
-                  dispatch({ type: "SET_EMAIL", email: e.target.value })
-                }
+                onChange={(e) => {
+                  dispatch({ type: "SET_EMAIL", email: e.target.value });
+                  if (registerState.error.email || e.target.value.length === 0)
+                    dispatch({ type: "VALIDATE_EMAIL" });
+                }}
+                onBlur={() => dispatch({ type: "VALIDATE_EMAIL" })}
                 value={registerState.email}
                 type="email"
                 placeholder="Enter email..."
-                className="border w-full border-black p-2 rounded-lg "
+                className={`${registerState.error.email ? "border-red-500 outline outline-red-500" : "border-black"} border w-full border-black p-2 rounded-lg `}
               />
             </div>
-            {registerState.email && !regex.test(registerState.email) && (
-              <p className="text-red-500 w-full">Enter a valid email</p>
+            {registerState.error.email && (
+              <div className="text-[0.7rem] -mt-1 text-red-500 w-full">
+                {registerState.error.email}
+              </div>
             )}
-
-            <label className="mt-2 text-left w-full">Password</label>
+            <label className="mt-2 font-medium text-left w-full">
+              Password
+            </label>
             <div className="w-full relative">
               <input
-                onChange={(e) =>
-                  dispatch({ type: "SET_PASSWORD", password: e.target.value })
-                }
+                onChange={(e) => {
+                  dispatch({ type: "SET_PASSWORD", password: e.target.value });
+                  if (registerState.error.password)
+                    dispatch({ type: "VALIDATE_PASSWORD" });
+                }}
+                onBlur={() => dispatch({ type: "VALIDATE_PASSWORD" })}
                 value={registerState.password}
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password..."
-                className="border w-full border-black p-2 rounded-lg pr-12"
+                className={`${registerState.error.password ? "border-red-500 outline outline-red-500" : "border-black"} border w-full border-black p-2 rounded-lg pr-12`}
               />
               {showPassword ? (
                 <button
@@ -123,9 +131,9 @@ function RegisterForm() {
                     e.preventDefault();
                     setShowPassword((prev) => !prev);
                   }}
-                  className=" absolute right-3 top-2 hover:cursor-pointer"
+                  className="absolute right-3 top-3 hover:cursor-pointer"
                 >
-                  <EyeClosed />
+                  <Eye className="w-5 h-5" />
                 </button>
               ) : (
                 <button
@@ -133,23 +141,33 @@ function RegisterForm() {
                     e.preventDefault();
                     setShowPassword((prev) => !prev);
                   }}
-                  className="absolute right-3 top-2 hover:cursor-pointer"
+                  className="absolute right-3 top-3 hover:cursor-pointer"
                 >
-                  <Eye />
+                  <EyeClosed className="w-5 h-5" />
                 </button>
               )}
             </div>
-            <label className="mt-2 text-left w-full">Confirm Password</label>
+            {registerState.error.password && (
+              <div className="text-[0.7rem] -mt-1 text-red-500 w-full">
+                {registerState.error.password}
+              </div>
+            )}
+            <label className="mt-2 font-medium text-left w-full">
+              Confirm Password
+            </label>
             <div className="w-full relative">
-              {" "}
               <input
-                onChange={(e) =>
-                  dispatch({ type: "SET_CONFIRM", confirm: e.target.value })
-                }
+                onChange={(e) => {
+                  dispatch({ type: "SET_CONFIRM", confirm: e.target.value });
+                  if (registerState.error.confirm) {
+                    dispatch({ type: "VALIDATE_CONFIRM" });
+                  }
+                }}
+                onBlur={() => dispatch({ type: "VALIDATE_CONFIRM" })}
                 value={registerState.confirm}
                 type={showConfirm ? "text" : "password"}
                 placeholder="Confirm password..."
-                className="border w-full border-black p-2 rounded-lg pr-12"
+                className={`${registerState.error.confirm ? "border-red-500 outline outline-red-500" : "border-black"} border w-full border-black p-2 rounded-lg pr-12`}
               />
               {showConfirm ? (
                 <button
@@ -157,9 +175,9 @@ function RegisterForm() {
                     e.preventDefault();
                     setShowConfirm((prev) => !prev);
                   }}
-                  className="absolute right-3 top-2  hover:cursor-pointer"
+                  className="absolute right-3 top-3 hover:cursor-pointer"
                 >
-                  <EyeClosed />
+                  <Eye className="w-5 h-5" />
                 </button>
               ) : (
                 <button
@@ -167,19 +185,19 @@ function RegisterForm() {
                     e.preventDefault();
                     setShowConfirm((prev) => !prev);
                   }}
-                  className="absolute right-3 top-2 hover:cursor-pointer"
+                  className="absolute right-3 top-3 hover:cursor-pointer"
                 >
-                  <Eye />
+                  <EyeClosed className="w-5 h-5" />
                 </button>
               )}
             </div>
-            {registerState.confirm.length === registerState.password.length &&
-              registerState.password !== registerState.confirm && (
-                <p className="text-red-500 w-full">Passwords do not match!</p>
-              )}
+            {registerState.error.confirm && (
+              <div className="text-[0.7rem] -mt-1 text-red-500 w-full">
+                {registerState.error.confirm}
+              </div>
+            )}
             <button
               disabled={
-                !regex.test(registerState.email) ||
                 !registerState.password ||
                 !registerState.confirm ||
                 registerState.password !== registerState.confirm
@@ -204,13 +222,13 @@ function RegisterForm() {
             </button>
           </form>
           <p className="mt-12 flex gap-2">
-            Have an account? Click{" "}
+            Have an account? Click
             <button
               onClick={() => router.push("/login")}
               className="text-blue-500 hover:cursor-pointer"
             >
               here
-            </button>{" "}
+            </button>
             to login
           </p>
         </>

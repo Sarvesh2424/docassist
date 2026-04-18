@@ -5,12 +5,12 @@ import { redirect } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 
 async function Register() {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-      });
-      if (session) {
-        redirect("/");
-      }
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (session) {
+    redirect("/");
+  }
   return (
     <>
       <Toaster position="bottom-right" />

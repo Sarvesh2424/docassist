@@ -7,11 +7,11 @@ import { Toaster } from "react-hot-toast";
 
 export default async function Upload() {
   const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session) {
-      redirect("/login");
-    }
+    headers: await headers(),
+  });
+  if (!session) {
+    redirect("/login");
+  }
   return (
     <>
       <Toaster position="bottom-right" />
