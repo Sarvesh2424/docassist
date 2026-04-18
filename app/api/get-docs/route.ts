@@ -5,7 +5,6 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const id = searchParams.get("id");
-    console.log(id);
     const documents = await prisma.file.findMany({
       where: {
         userId: id!,

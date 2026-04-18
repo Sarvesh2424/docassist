@@ -68,9 +68,9 @@ function UploadFile() {
           Uploading file... This may take a moment...
         </div>
       ) : (
-        <div className="flex p-4 shadow-xl justify-center items-center gap-4 text-white flex-col w-1/3 rounded-lg">
+        <div className="flex p-4 shadow-xl justify-center items-center gap-4 text-white flex-col md:w-1/3 rounded-lg">
           <h2 className="text-lg">Select a .pdf file to upload</h2>
-          <div className="relative w-2/3 hover:cursor-pointer">
+          <div className="relative md:w-2/3 w-5/6 hover:cursor-pointer">
             <input
               className="border text-transparent hover:cursor-pointer border-white w-full p-20 file:hidden rounded-xl"
               onChange={(e) => {
@@ -81,11 +81,11 @@ function UploadFile() {
               type="file"
             />
             {file ? (
-              <h2 className="absolute top-1/2 left-18">{file?.name}</h2>
+              <h2 className="absolute top-1/2 left-0 right-0 mx-auto text-center">{file?.name}</h2>
             ) : (
               <>
-                <Upload className="absolute h-20 w-20 top-4 right-2/5" />
-                <h2 className="absolute bottom-4 right-2/5">
+                <Upload className="absolute top-1/4 left-0 right-0 mx-auto h-15 w-15 " />
+                <h2 className="absolute bottom-1/4 left-0 right-0 mx-auto text-center">
                   Upload a file
                 </h2>{" "}
               </>
@@ -97,7 +97,7 @@ function UploadFile() {
               e.preventDefault();
               handleUpload();
             }}
-            className="p-2 bg-yellow-500 hover:bg-yellow-600 cursor-pointer transition-colors text-black rounded-lg"
+            className="p-2 bg-yellow-500 w-1/3 text-sm font-semibold hover:bg-yellow-600 cursor-pointer transition-colors text-black rounded-lg"
           >
             Upload
           </button>

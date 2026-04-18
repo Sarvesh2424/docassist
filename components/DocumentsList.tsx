@@ -27,7 +27,7 @@ function DocumentsList() {
   });
 
   return (
-    <div className="grid grid-cols-4 mt-4 gap-4">
+    <div className="grid md:grid-cols-4 grid-cols-1 mt-4 gap-4">
       {isPending || session.isPending ? (
         <DocumentCardSkeleton />
       ) : (
@@ -38,7 +38,6 @@ function DocumentsList() {
             </p>
           ) : (
             documents.map((document: Document) => {
-              console.log(document.uploadedAt);
               return (
                 <DocumentCard
                   key={document.id}

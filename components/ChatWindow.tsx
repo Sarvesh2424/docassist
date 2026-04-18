@@ -9,7 +9,6 @@ import MessageBubble from "./MessageBubble";
 import BubbleSkeleton from "./BubbleSkeleton";
 
 async function getChat({ id }: { id: string }) {
-  console.log("func: " + id);
   const response = await fetch(`/api/get-chats?id=${id}`);
   const data = await response.json();
   return data;
@@ -39,7 +38,6 @@ async function uploadToDB({
   chat: Array<object>;
   fileId: string;
 }) {
-  console.log(chat);
   // if (Object.keys(chat)[0] == "ai") {
   //   console.log("ai upload");
   // }
@@ -53,7 +51,6 @@ async function uploadToDB({
 }
 
 function ChatWindow({ id }: { id: string }) {
-  console.log("id:" + id);
   const queryClient = useQueryClient();
   const bottomRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState("");
@@ -96,7 +93,6 @@ function ChatWindow({ id }: { id: string }) {
     setLocalChat([...localChat, { human: message }]);
     prismaMutate({ chat: [...chat.chat, { human: message }], fileId: id });
     mutate({ query: message, file_id: id });
-    console.log("data:" + data);
   };
 
   useEffect(() => {
@@ -105,13 +101,12 @@ function ChatWindow({ id }: { id: string }) {
 
   useEffect(() => {
     if (chat?.chat) {
-      console.log("in effect: ", chat.chat);
       setLocalChat(chat.chat);
     }
   }, [chat]);
 
   return (
-    <div className="text-white grow flex flex-col items-center justify-center items py-20 p-4">
+    <div className="text-white grow flex flex-col items-center justify-center items py-20 md:py-24">
       {isPending ? (
         <p>Loading</p>
       ) : (
@@ -123,7 +118,7 @@ function ChatWindow({ id }: { id: string }) {
           {localChat.length == 0 ? (
             <p className="text-2xl">No messages found! Start your chat now!</p>
           ) : (
-            <div className="w-2/3 flex flex-col gap-4 p-12 overflow-y-auto">
+            <div className="md:w-2/3 w-full flex flex-col gap-4 p-12 overflow-y-auto">
               {genAi ? (
                 <>
                   {localChat.map(
@@ -148,7 +143,7 @@ function ChatWindow({ id }: { id: string }) {
           )}
         </>
       )}
-      <form className="fixed bottom-8 w-2/3">
+      <form className="fixed bottom-8 md:w-2/3">
         <div className="px-8">
           <div className="relative w-full">
             <input
@@ -178,9 +173,19 @@ function ChatWindow({ id }: { id: string }) {
             setLocalChat([]);
             router.replace("/");
           }}
-          className=" fixed top-12 text-red-500 hover:cursor-pointer right-12"
+          className="md:hidden fixed top-14 text-red-500 shadow-black shadow-2xl p-2 bg-white rounded-full hover:cursor-pointer right-12"
         >
-          <X className="w-10 h-20 " />
+          <X className="w-5 h-5 " />
+        </button>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setLocalChat([]);
+            router.replace("/");
+          }}
+          className=" hidden md:block fixed top-12 text-red-500 hover:cursor-pointer right-12"
+        >
+          <X className="w-10 h-10 " />
         </button>
       </form>
     </div>

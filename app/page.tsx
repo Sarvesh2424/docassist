@@ -17,7 +17,7 @@ export default async function Home() {
       <Toaster position="bottom-right" />
       <NavBar />
       <div className="bg-black min-h-screen">
-        <div className="p-24 pt-32">
+        <div className="md:p-24 p-4 md:pt-32 pt-32">
           <h1 className="text-white text-2xl">Your documents</h1>
           <DocumentsList />
         </div>
