@@ -9,6 +9,7 @@ import MessageBubble from "./MessageBubble";
 import BubbleSkeleton from "./BubbleSkeleton";
 
 async function getChat({ id }: { id: string }) {
+  console.log("func: " + id);
   const response = await fetch(`/api/get-chats?id=${id}`);
   const data = await response.json();
   return data;
@@ -52,19 +53,18 @@ async function uploadToDB({
 }
 
 function ChatWindow({ id }: { id: string }) {
+  console.log("id:" + id);
+  const queryClient = useQueryClient();
   const bottomRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState("");
   const [dummy, setDummy] = useState("");
   const [localChat, setLocalChat] = useState<
     Array<{ human?: string; message?: string; ai?: string }>
   >([]);
-  const {
-    data: chat,
-    isPending,
-    isSuccess,
-  } = useQuery({
+  const { data: chat, isPending } = useQuery({
     queryKey: ["chat"],
     queryFn: () => getChat({ id }),
+    gcTime: 0,
   });
   const router = useRouter();
   const { mutate: prismaMutate, isPending: prismaPending } = useMutation({
@@ -105,9 +105,11 @@ function ChatWindow({ id }: { id: string }) {
 
   useEffect(() => {
     if (chat?.chat) {
+      console.log("in effect: ", chat.chat);
       setLocalChat(chat.chat);
     }
-  }, [isSuccess]);
+  }, [chat]);
+
   return (
     <div className="text-white grow flex flex-col items-center justify-center items py-20 p-4">
       {isPending ? (
@@ -146,36 +148,41 @@ function ChatWindow({ id }: { id: string }) {
           )}
         </>
       )}
-      <div className="fixed bottom-8 w-2/3 px-8">
-        <div className="relative w-full">
-          <input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            type="text"
-            placeholder="Enter message..."
-            className="bg-white rounded-lg text-black shadow-black shadow-2xl  placeholder:text-gray-600 p-4 w-full pr-20"
-          />
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
-            className="absolute hover:cursor-pointer right-8 bottom-4 text-black"
-          >
-            <Send />
-          </button>
-        </div>
-      </div>
+      <form className="fixed bottom-8 w-2/3">
+        <div className="px-8">
+          <div className="relative w-full">
+            <input
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              type="text"
+              placeholder="Enter message..."
+              className="bg-white rounded-lg text-black shadow-black shadow-2xl  placeholder:text-gray-600 p-4 w-full pr-20"
+            />
+            <button
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
 
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          router.replace("/");
-        }}
-        className=" fixed top-12 text-red-500 hover:cursor-pointer right-12"
-      >
-        <X className="w-10 h-20 " />
-      </button>
+                handleSend();
+              }}
+              className="absolute hover:cursor-pointer right-8 bottom-4 text-black"
+            >
+              <Send />
+            </button>
+          </div>
+        </div>
+
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setLocalChat([]);
+            router.replace("/");
+          }}
+          className=" fixed top-12 text-red-500 hover:cursor-pointer right-12"
+        >
+          <X className="w-10 h-20 " />
+        </button>
+      </form>
     </div>
   );
 }

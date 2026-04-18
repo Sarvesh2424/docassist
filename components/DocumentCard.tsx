@@ -13,7 +13,6 @@ function DocumentCard({
   name: string;
   id: string;
 }) {
-  console.log(date);
   const router = useRouter();
   return (
     <div className="bg-white p-2 rounded-lg  text-lg flex flex-col gap-4">

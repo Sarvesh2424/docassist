@@ -173,7 +173,7 @@ function RegisterForm() {
                 </button>
               )}
             </div>
-            {registerState.confirm &&
+            {registerState.confirm.length === registerState.password.length &&
               registerState.password !== registerState.confirm && (
                 <p className="text-red-500 w-full">Passwords do not match!</p>
               )}
