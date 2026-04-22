@@ -180,7 +180,6 @@ function ChatWindow({ id }: { id: string }) {
         <button
           onClick={(e) => {
             e.preventDefault();
-            setLocalChat([]);
             router.replace("/");
           }}
           className=" hidden md:block fixed bg-white rounded-full p-2 hover:bg-gray-200 transition-colors top-12 text-red-500 hover:cursor-pointer right-12"
