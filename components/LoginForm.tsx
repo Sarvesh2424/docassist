@@ -18,6 +18,7 @@ function LoginForm() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -77,23 +78,33 @@ function LoginForm() {
         <>
           <h1 className="text-black text-3xl">Login</h1>
           <form className="flex flex-col w-1/2 items-center justify-center text-black mt-12 gap-2">
-            <label className="w-full text-left">Email</label>
+            <label className="w-full text-left text-sm font-semibold">
+              Email
+            </label>
             <div className="w-full">
               <input
                 onChange={(e) =>
                   dispatch({ type: "SET_EMAIL", email: e.target.value })
                 }
+                onBlur={() => setCheckEmail(true)}
+                onClick={() => setCheckEmail(false)}
                 value={loginState.email}
                 type="email"
                 placeholder="Enter email..."
                 className="border w-full border-black p-2 rounded-lg "
               />
             </div>
-            {loginState.email && !regex.test(loginState.email) && (
-              <p className="text-red-500 w-full">Enter a valid email</p>
-            )}
+            {checkEmail &&
+              loginState.email &&
+              !regex.test(loginState.email) && (
+                <p className="text-red-500 w-full text-sm">
+                  Enter a valid email
+                </p>
+              )}
 
-            <label className="mt-2 text-left w-full">Password</label>
+            <label className="mt-2 text-left w-full text-sm font-semibold">
+              Password
+            </label>
             <div className="w-full relative">
               <input
                 onChange={(e) =>
@@ -103,19 +114,8 @@ function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password..."
                 className="border w-full border-black p-2 rounded-lg pr-12"
-              >
-              </input>
+              ></input>
               {showPassword ? (
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowPassword((prev) => !prev);
-                  }}
-                  className="absolute right-3 top-2 hover:cursor-pointer"
-                >
-                  <EyeClosed />
-                </button>
-              ) : (
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -125,11 +125,21 @@ function LoginForm() {
                 >
                   <Eye />
                 </button>
+              ) : (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowPassword((prev) => !prev);
+                  }}
+                  className="absolute right-3 top-2 hover:cursor-pointer"
+                >
+                  <EyeClosed />
+                </button>
               )}
             </div>
 
             <button
-              disabled={!regex.test(loginState.email)}
+              disabled={!regex.test(loginState.email) || !loginState.password}
               onClick={(e) => {
                 e.preventDefault();
                 emailLogin();

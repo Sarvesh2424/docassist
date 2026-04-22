@@ -113,10 +113,10 @@ function ChatWindow({ id }: { id: string }) {
         <>
           <div className="fixed top-0 p-2 bg-white rounded-b-2xl text-black text-2xl min-w-2/3 text-center shadow-2xl shadow-black">
             {" "}
-            {chat.title}
+            <p className="truncate max-w-full">{chat.title}</p>
           </div>
           {localChat.length == 0 ? (
-            <p className="text-2xl">No messages found! Start your chat now!</p>
+            <p className="text-2xl text-center">No messages found! Start your chat now!</p>
           ) : (
             <div className="md:w-2/3 w-full flex flex-col gap-4 p-12 overflow-y-auto">
               {genAi ? (
@@ -173,7 +173,7 @@ function ChatWindow({ id }: { id: string }) {
             setLocalChat([]);
             router.replace("/");
           }}
-          className="md:hidden fixed top-14 text-red-500 shadow-black shadow-2xl p-2 bg-white rounded-full hover:cursor-pointer right-12"
+          className="md:hidden fixed top-14  text-red-500 shadow-black shadow-2xl p-2 bg-white rounded-full hover:cursor-pointer right-12"
         >
           <X className="w-5 h-5 " />
         </button>
@@ -183,7 +183,7 @@ function ChatWindow({ id }: { id: string }) {
             setLocalChat([]);
             router.replace("/");
           }}
-          className=" hidden md:block fixed top-12 text-red-500 hover:cursor-pointer right-12"
+          className=" hidden md:block fixed bg-white rounded-full p-2 hover:bg-gray-200 transition-colors top-12 text-red-500 hover:cursor-pointer right-12"
         >
           <X className="w-10 h-10 " />
         </button>

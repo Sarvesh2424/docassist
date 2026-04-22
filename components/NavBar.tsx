@@ -5,9 +5,9 @@ import { LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import DocumentsList from "./DocumentsList";
 
 function NavBar() {
-  const pathName = usePathname();
   const [loggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +28,7 @@ function NavBar() {
 
   return (
     <>
-      <div className="bg-yellow-500 fixed w-full flex items-center justify-between  gap-4 p-4 text-black">
+      <div className="md:hidden bg-yellow-500 fixed w-full flex items-center justify-between  gap-4 p-4 text-black">
         <div className="flex gap-4 items-center">
           <h1 className="text-4xl">Docassist</h1>
         </div>
@@ -41,24 +41,13 @@ function NavBar() {
           {isOpen ? <X /> : <Menu />}
         </button>
         {isOpen && (
-          <div className="flex flex-col p-2 items-center justify-center absolute right-2 top-16 bg-yellow-600 shadow-black shadow-lg rounded-lg">
-            <Link href={"/"}>
-              <button
-                className={`ml-8 hover:cursor-pointer ${pathName == "/" && "font-extrabold"}`}
-              >
-                Documents
-              </button>
-            </Link>
-            <Link href={"/upload"}>
-              <button
-                className={`hover:cursor-pointer ${pathName == "/upload" && "font-extrabold"}`}
-              >
-                Upload
-              </button>
-            </Link>
+          <div className="flex md:hidden flex-col p-2 items-center justify-between absolute  top-16 right-2 shadow-2xl shadow-black bg-yellow-500  w-2/3 rounded-lg">
+            <div className="flex w-full flex-col overflow-y-auto h-[calc(75vh)] justify-start gap-4 items-center">
+              <DocumentsList />
+            </div>
             <button
               disabled={loggingOut}
-              className={`text-lg  text-red-500 mt-2 ${loggingOut && "hover:cursor-wait"} flex gap-2 items-center hover:cursor-pointer hover:bg-red-300 transition-colors p-2 bg-red-200 rounded-lg`}
+              className={`text-lg  text-red-500 mt-8 w-full ${loggingOut && "hover:cursor-wait"} flex gap-2 items-center hover:cursor-pointer hover:bg-red-300 transition-colors p-2 bg-red-200 rounded-lg`}
               onClick={(e) => {
                 e.preventDefault();
                 handleLogout();
@@ -69,29 +58,17 @@ function NavBar() {
             </button>
           </div>
         )}
+
       </div>
-      <div className="hidden bg-yellow-500 fixed w-full md:flex items-center justify-between gap-4 p-4 text-black">
-        <div className="flex gap-4 items-center">
-          <h1 className="text-4xl">Docassist</h1>
-          <Link href={"/"}>
-            <button
-              className={`ml-8 hover:cursor-pointer ${pathName == "/" && "font-extrabold"}`}
-            >
-              Documents
-            </button>
-          </Link>
-          <Link href={"/upload"}>
-            <button
-              className={`hover:cursor-pointer ${pathName == "/upload" && "font-extrabold"}`}
-            >
-              Upload
-            </button>
-          </Link>
+      <div className="hidden bg-yellow-500 flex-col max-h-screen max-w-1/5 min-w-1/5 md:flex items-center justify-between gap-4 p-4 text-black">
+        <h1 className="text-4xl">Docassist</h1>
+        <div className="flex w-full flex-col justify-start overflow-y-auto grow [scrollbar-width:none] gap-4 items-center">
+          <DocumentsList />
         </div>
 
         <button
           disabled={loggingOut}
-          className={`text-lg  text-red-500 mt-2 ${loggingOut && "hover:cursor-wait"} flex gap-2 items-center hover:cursor-pointer hover:bg-red-300 transition-colors p-2 bg-red-200 rounded-lg`}
+          className={`text-lg w-full flex justify-center  text-red-500 mt-2 ${loggingOut && "hover:cursor-wait"} flex gap-2 items-center hover:cursor-pointer hover:bg-red-300 transition-colors p-2 bg-red-200 rounded-lg`}
           onClick={(e) => {
             e.preventDefault();
             handleLogout();
@@ -101,6 +78,7 @@ function NavBar() {
           Log Out
         </button>
       </div>
+      
     </>
   );
 }

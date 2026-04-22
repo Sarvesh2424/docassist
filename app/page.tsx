@@ -1,9 +1,9 @@
-import DocumentsList from "@/components/DocumentsList";
 import NavBar from "@/components/NavBar";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Toaster } from "react-hot-toast";
+import UploadFile from "@/components/UploadFile";
 
 export default async function Home() {
   const session = await auth.api.getSession({
@@ -15,11 +15,11 @@ export default async function Home() {
   return (
     <>
       <Toaster position="bottom-right" />
-      <NavBar />
-      <div className="bg-black min-h-screen">
-        <div className="md:p-24 p-4 md:pt-32 pt-32">
-          <h1 className="text-white text-2xl">Your documents</h1>
-          <DocumentsList />
+      
+      <div className="bg-black min-h-screen flex justify-between">
+        <NavBar />
+        <div className="w-full">
+          <UploadFile />
         </div>
       </div>
     </>

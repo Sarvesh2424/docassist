@@ -27,17 +27,22 @@ function DocumentsList() {
   });
 
   return (
-    <div className="grid md:grid-cols-4 grid-cols-1 mt-4 gap-4">
+    <div className="flex w-full flex-col mt-4 gap-2">
+      <p className="text-sm  w-full text-gray-800 flex items-start">
+        Your docs
+      </p>
       {isPending || session.isPending ? (
-        <DocumentCardSkeleton />
+        <div className="w-full flex justify-center">
+          <div className=" h-10 w-10 border border-black border-l-0 animate-spin rounded-full mt-2 "></div>
+        </div>
       ) : (
         <>
           {documents.length == 0 ? (
-            <p className="text-white">
+            <p className="text-black text-center">
               No documents found! Start uploading a PDF!
             </p>
           ) : (
-            documents.map((document: Document) => {
+            documents.toReversed().map((document: Document) => {
               return (
                 <DocumentCard
                   key={document.id}

@@ -20,6 +20,7 @@ function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -90,23 +91,25 @@ function RegisterForm() {
         <>
           <h1 className="text-black text-3xl">Register</h1>
           <form className="flex flex-col w-1/2 items-center justify-center text-black mt-12 gap-2">
-            <label className="w-full text-left">Email</label>
+            <label className="w-full text-left text-sm font-semibold">Email</label>
             <div className="w-full">
               <input
                 onChange={(e) =>
                   dispatch({ type: "SET_EMAIL", email: e.target.value })
                 }
+                onBlur={() => setCheckEmail(true)}
+                 onClick={() => setCheckEmail(false)}
                 value={registerState.email}
                 type="email"
                 placeholder="Enter email..."
                 className="border w-full border-black p-2 rounded-lg "
               />
             </div>
-            {registerState.email && !regex.test(registerState.email) && (
-              <p className="text-red-500 w-full">Enter a valid email</p>
+            {checkEmail && registerState.email && !regex.test(registerState.email) && (
+              <p className="text-red-500 w-full text-sm">Enter a valid email</p>
             )}
 
-            <label className="mt-2 text-left w-full">Password</label>
+            <label className="mt-2 text-left w-full text-sm font-semibold">Password</label>
             <div className="w-full relative">
               <input
                 onChange={(e) =>
@@ -125,7 +128,7 @@ function RegisterForm() {
                   }}
                   className=" absolute right-3 top-2 hover:cursor-pointer"
                 >
-                  <EyeClosed />
+                  <Eye />
                 </button>
               ) : (
                 <button
@@ -135,11 +138,11 @@ function RegisterForm() {
                   }}
                   className="absolute right-3 top-2 hover:cursor-pointer"
                 >
-                  <Eye />
+                  <EyeClosed />
                 </button>
               )}
             </div>
-            <label className="mt-2 text-left w-full">Confirm Password</label>
+            <label className="mt-2 text-left w-full text-sm font-semibold ">Confirm Password</label>
             <div className="w-full relative">
               {" "}
               <input
@@ -159,7 +162,7 @@ function RegisterForm() {
                   }}
                   className="absolute right-3 top-2  hover:cursor-pointer"
                 >
-                  <EyeClosed />
+                  <Eye />
                 </button>
               ) : (
                 <button
@@ -169,13 +172,13 @@ function RegisterForm() {
                   }}
                   className="absolute right-3 top-2 hover:cursor-pointer"
                 >
-                  <Eye />
+                  <EyeClosed />
                 </button>
               )}
             </div>
-            {registerState.confirm.length === registerState.password.length &&
+            {registerState.confirm.length >= registerState.password.length &&
               registerState.password !== registerState.confirm && (
-                <p className="text-red-500 w-full">Passwords do not match!</p>
+                <p className="text-red-500 w-full text-sm">Passwords do not match!</p>
               )}
             <button
               disabled={

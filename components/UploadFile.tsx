@@ -6,12 +6,17 @@ import { Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useDropzone } from "react-dropzone";
+import { useCallback } from "react";
 
 const uploadFile = async (formData: FormData) => {
-  const response = await fetch("https://sarvesh-24-24-docassist.hf.space/upload", {
-    body: formData,
-    method: "POST",
-  });
+  const response = await fetch(
+    "https://sarvesh-24-24-docassist.hf.space/upload",
+    {
+      body: formData,
+      method: "POST",
+    },
+  );
   return response.json();
 };
 
@@ -30,6 +35,19 @@ function UploadFile() {
   const router = useRouter();
   const session = authClient.useSession();
   const [file, setFile] = useState<File | null>(null);
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      setFile(acceptedFiles[0]);
+    }
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: {
+      "application/pdf": [".pdf"],
+    },
+  });
   const { mutate: prismaMutate, isPending: prismaPending } = useMutation({
     mutationFn: uploadToDB,
   });
@@ -43,7 +61,7 @@ function UploadFile() {
         userId: session.data?.user.id,
       });
       setFile(null);
-      router.replace("/");
+      router.replace(`/chat/${fileId}`);
       toast.success("Uploaded file successfully");
     },
     onError: () => {
@@ -68,39 +86,39 @@ function UploadFile() {
           Uploading file... This may take a moment...
         </div>
       ) : (
-        <div className="flex p-4 shadow-xl justify-center items-center gap-4 text-white flex-col md:w-1/3 rounded-lg">
-          <h2 className="text-lg">Select a .pdf file to upload</h2>
-          <div className="relative md:w-2/3 w-5/6 hover:cursor-pointer">
-            <input
-              className="border text-transparent hover:cursor-pointer border-white w-full p-20 file:hidden rounded-xl"
-              onChange={(e) => {
-                if (e.target.files) {
-                  setFile(e.target.files[0]);
-                }
-              }}
-              type="file"
-            />
-            {file ? (
-              <h2 className="absolute top-1/2 left-0 right-0 mx-auto text-center">{file?.name}</h2>
-            ) : (
-              <>
-                <Upload className="absolute top-1/4 left-0 right-0 mx-auto h-15 w-15 " />
-                <h2 className="absolute bottom-1/4 left-0 right-0 mx-auto text-center">
-                  Upload a file
-                </h2>{" "}
-              </>
-            )}
-          </div>
+        <div className="flex p-4 shadow-xl max-w-full h-2/3 justify-center items-center gap-4 text-white flex-col md:w-1/2 rounded-lg">
+          <h2 className="text-4xl w-full text-start mb-4 font-semibold">
+            Select a .pdf file to upload
+          </h2>
+          <div className="bg-white rounded-xl flex flex-col w-full items-center">
+            <div {...getRootProps()} className="w-full p-4 cursor-pointer">
+              <input {...getInputProps()} />
 
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleUpload();
-            }}
-            className="p-2 bg-yellow-500 w-1/3 text-sm font-semibold hover:bg-yellow-600 cursor-pointer transition-colors text-black rounded-lg"
-          >
-            Upload
-          </button>
+              <div className="bg-gray-200 border border-gray-500 rounded-xl p-16 flex flex-col items-center justify-center text-black">
+                {file ? (
+                  <p className="text-lg font-semibold mt-2">{file.name}</p>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <Upload className="w-12 h-12" />
+                    <p className="text-lg mt-2">Upload or drop a file here</p>  
+                  </div>
+                )}
+              </div>
+            </div>
+            <>
+              {file && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleUpload();
+                  }}
+                  className="p-2 bg-yellow-500 w-2/3 text-sm font-semibold hover:bg-yellow-600 cursor-pointer transition-colors text-black rounded-lg mb-2"
+                >
+                  Upload
+                </button>
+              )}
+            </>
+          </div>
         </div>
       )}
     </div>
