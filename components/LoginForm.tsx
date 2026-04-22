@@ -7,6 +7,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer, useState } from "react";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -41,11 +42,9 @@ function LoginForm() {
       {
         email: loginState.email,
         password: loginState.password,
+        callbackURL:"/"
       },
       {
-        onSuccess: () => {
-          router.replace("/");
-        },
         onError: () => {
           toast.error("Error logging in!");
         },
@@ -154,19 +153,16 @@ function LoginForm() {
                 e.preventDefault();
                 googleLogin();
               }}
-              className="mt-2 p-2 bg-red-500 flex items-center justify-center gap-2 text-white w-full rounded-lg hover:bg-red-600 hover:transition-colors hover:cursor-pointer"
+              className="mt-1 p-2 bg-red-500 flex items-center justify-center gap-2 text-white w-full rounded-lg hover:bg-red-600 hover:transition-colors hover:cursor-pointer"
             >
               Continue with <GoogleIcon />
             </button>
           </form>
           <p className="mt-12 flex gap-2">
-            New to Cricky? Click{" "}
-            <button
-              onClick={() => router.push("/register")}
-              className="text-blue-500 hover:cursor-pointer"
-            >
-              here
-            </button>{" "}
+            New to Docassist? Click
+            <Link href={"/register"}>
+              <span className="text-blue-500 hover:cursor-pointer">here</span>
+            </Link>
             to register
           </p>
         </>

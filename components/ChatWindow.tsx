@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import MessageBubble from "./MessageBubble";
 import BubbleSkeleton from "./BubbleSkeleton";
+import Link from "next/link";
 
 async function getChat({ id }: { id: string }) {
   const response = await fetch(`/api/get-chats?id=${id}`);
@@ -116,7 +117,9 @@ function ChatWindow({ id }: { id: string }) {
             <p className="truncate max-w-full">{chat.title}</p>
           </div>
           {localChat.length == 0 ? (
-            <p className="text-2xl text-center">No messages found! Start your chat now!</p>
+            <p className="text-2xl text-center">
+              No messages found! Start your chat now!
+            </p>
           ) : (
             <div className="md:w-2/3 w-full flex flex-col gap-4 p-12 overflow-y-auto">
               {genAi ? (
@@ -166,26 +169,17 @@ function ChatWindow({ id }: { id: string }) {
             </button>
           </div>
         </div>
+        <Link href="/">
+          <button className="md:hidden fixed top-14  text-red-500 shadow-black shadow-2xl p-2 bg-white rounded-full hover:cursor-pointer right-12">
+            <X className="w-5 h-5 " />
+          </button>
+        </Link>
 
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            setLocalChat([]);
-            router.replace("/");
-          }}
-          className="md:hidden fixed top-14  text-red-500 shadow-black shadow-2xl p-2 bg-white rounded-full hover:cursor-pointer right-12"
-        >
-          <X className="w-5 h-5 " />
-        </button>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            router.replace("/");
-          }}
-          className=" hidden md:block fixed bg-white rounded-full p-2 hover:bg-gray-200 transition-colors top-12 text-red-500 hover:cursor-pointer right-12"
-        >
-          <X className="w-10 h-10 " />
-        </button>
+        <Link href={"/"} replace>
+          <button className=" hidden md:block fixed bg-white rounded-full p-2 hover:bg-gray-200 transition-colors top-12 text-red-500 hover:cursor-pointer right-12">
+            <X className="w-10 h-10 " />
+          </button>
+        </Link>
       </form>
     </div>
   );

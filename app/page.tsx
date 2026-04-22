@@ -14,7 +14,7 @@ export default async function Home() {
   }
   return (
     <>
-      <Toaster position="bottom-right" />
+      <Toaster position="top-right" />
       
       <div className="bg-black min-h-screen flex justify-between">
         <NavBar />

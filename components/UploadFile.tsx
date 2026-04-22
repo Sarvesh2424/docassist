@@ -60,8 +60,8 @@ function UploadFile() {
         fileName: file?.name,
         userId: session.data?.user.id,
       });
-      setFile(null);
       router.replace(`/chat/${fileId}`);
+      setFile(null);
       toast.success("Uploaded file successfully");
     },
     onError: () => {
@@ -100,7 +100,7 @@ function UploadFile() {
                 ) : (
                   <div className="flex flex-col items-center">
                     <Upload className="w-12 h-12" />
-                    <p className="text-lg mt-2">Upload or drop a file here</p>  
+                    <p className="text-lg mt-2">Upload or drop a file here</p>
                   </div>
                 )}
               </div>

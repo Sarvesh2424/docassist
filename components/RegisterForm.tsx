@@ -7,6 +7,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -56,9 +57,6 @@ function RegisterForm() {
         callbackURL: "/",
       },
       {
-        onSuccess: (ctx) => {
-          router.replace("/");
-        },
         onError: (ctx) => {
           toast.error("Error signing up!");
         },
@@ -91,25 +89,33 @@ function RegisterForm() {
         <>
           <h1 className="text-black text-3xl">Register</h1>
           <form className="flex flex-col w-1/2 items-center justify-center text-black mt-12 gap-2">
-            <label className="w-full text-left text-sm font-semibold">Email</label>
+            <label className="w-full text-left text-sm font-semibold">
+              Email
+            </label>
             <div className="w-full">
               <input
                 onChange={(e) =>
                   dispatch({ type: "SET_EMAIL", email: e.target.value })
                 }
                 onBlur={() => setCheckEmail(true)}
-                 onClick={() => setCheckEmail(false)}
+                onClick={() => setCheckEmail(false)}
                 value={registerState.email}
                 type="email"
                 placeholder="Enter email..."
                 className="border w-full border-black p-2 rounded-lg "
               />
             </div>
-            {checkEmail && registerState.email && !regex.test(registerState.email) && (
-              <p className="text-red-500 w-full text-sm">Enter a valid email</p>
-            )}
+            {checkEmail &&
+              registerState.email &&
+              !regex.test(registerState.email) && (
+                <p className="text-red-500 w-full text-sm">
+                  Enter a valid email
+                </p>
+              )}
 
-            <label className="mt-2 text-left w-full text-sm font-semibold">Password</label>
+            <label className="mt-2 text-left w-full text-sm font-semibold">
+              Password
+            </label>
             <div className="w-full relative">
               <input
                 onChange={(e) =>
@@ -142,7 +148,9 @@ function RegisterForm() {
                 </button>
               )}
             </div>
-            <label className="mt-2 text-left w-full text-sm font-semibold ">Confirm Password</label>
+            <label className="mt-2 text-left w-full text-sm font-semibold ">
+              Confirm Password
+            </label>
             <div className="w-full relative">
               {" "}
               <input
@@ -178,7 +186,9 @@ function RegisterForm() {
             </div>
             {registerState.confirm.length >= registerState.password.length &&
               registerState.password !== registerState.confirm && (
-                <p className="text-red-500 w-full text-sm">Passwords do not match!</p>
+                <p className="text-red-500 w-full text-sm">
+                  Passwords do not match!
+                </p>
               )}
             <button
               disabled={
@@ -201,19 +211,16 @@ function RegisterForm() {
                 e.preventDefault();
                 googleLogin();
               }}
-              className="mt-2 p-2 bg-red-500 text-white w-full rounded-lg hover:bg-red-600 hover:transition-colors hover:cursor-pointer"
+              className="mt-1 p-2 bg-red-500 text-white w-full rounded-lg hover:bg-red-600 hover:transition-colors hover:cursor-pointer"
             >
               Continue with <GoogleIcon />
             </button>
           </form>
           <p className="mt-12 flex gap-2">
-            Have an account? Click{" "}
-            <button
-              onClick={() => router.push("/login")}
-              className="text-blue-500 hover:cursor-pointer"
-            >
-              here
-            </button>{" "}
+            Have an account? Click
+            <Link href={"/login"}>
+              <span className="text-blue-500 hover:cursor-pointer">here</span>
+            </Link>
             to login
           </p>
         </>

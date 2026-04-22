@@ -17,8 +17,8 @@ function NavBar() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          new Promise((resolve) => setTimeout(resolve, 500)).then(() => {
-            router.push("/login");
+          new Promise((resolve) => setTimeout(resolve, 1)).then(() => {
+            router.replace("/login");
           });
         },
       },
@@ -58,7 +58,6 @@ function NavBar() {
             </button>
           </div>
         )}
-
       </div>
       <div className="hidden bg-yellow-500 flex-col max-h-screen max-w-1/5 min-w-1/5 md:flex items-center justify-between gap-4 p-4 text-black">
         <h1 className="text-4xl">Docassist</h1>
@@ -78,7 +77,6 @@ function NavBar() {
           Log Out
         </button>
       </div>
-      
     </>
   );
 }

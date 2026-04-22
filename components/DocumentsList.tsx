@@ -27,8 +27,8 @@ function DocumentsList() {
   });
 
   return (
-    <div className="flex w-full flex-col mt-4 gap-2">
-      <p className="text-sm  w-full text-gray-800 flex items-start">
+    <div className="flex w-full flex-col mt-4 ">
+      <p className="text-sm font-semibold w-full text-gray-800 flex mb-2 items-start">
         Your docs
       </p>
       {isPending || session.isPending ? (
