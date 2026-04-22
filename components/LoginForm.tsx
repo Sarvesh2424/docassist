@@ -20,6 +20,7 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -42,9 +43,12 @@ function LoginForm() {
       {
         email: loginState.email,
         password: loginState.password,
-        callbackURL:"/"
+        callbackURL: "/",
       },
       {
+        onSuccess: () => {
+          setLoginSuccess(true);
+        },
         onError: () => {
           toast.error("Error logging in!");
         },
@@ -61,6 +65,9 @@ function LoginForm() {
         callbackURL: "/",
       },
       {
+        onSuccess: () => {
+          setLoginSuccess(true);
+        },
         onError: () => {
           toast.error("Error logging in!");
         },
@@ -71,7 +78,7 @@ function LoginForm() {
 
   return (
     <>
-      {isPending ? (
+      {isPending || loginSuccess ? (
         <div className="rounded-full animate-spin w-10 h-10 border-2 border-l-0 border-black"></div>
       ) : (
         <>
@@ -145,7 +152,7 @@ function LoginForm() {
               }}
               className={`bg-green-500 rounded-lg p-2 disabled:bg-gray-500 w-full ${loading && "hover:cursor-wait"} text-white mt-4 hover:bg-green-600 hover:transition-colors hover:cursor-pointer`}
             >
-              Login
+              {loading ? <p>Logging in...</p> : <p>Login</p>}
             </button>
             <p className="mt-4">OR</p>
             <button

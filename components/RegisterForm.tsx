@@ -21,6 +21,7 @@ function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
   const router = useRouter();
 
@@ -57,6 +58,9 @@ function RegisterForm() {
         callbackURL: "/",
       },
       {
+        onSuccess: () => {
+          setRegisterSuccess(true);
+        },
         onError: (ctx) => {
           toast.error("Error signing up!");
         },
@@ -83,7 +87,7 @@ function RegisterForm() {
 
   return (
     <>
-      {isPending ? (
+      {isPending || registerSuccess ? (
         <div className="rounded-full animate-spin w-10 h-10 border-2 border-l-0 border-black"></div>
       ) : (
         <>
