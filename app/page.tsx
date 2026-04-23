@@ -16,7 +16,7 @@ export default async function Home() {
     <>
       <Toaster position="top-right" />
       
-      <div className="bg-black min-h-screen flex justify-between">
+      <div className="bg-gray-900 min-h-screen flex justify-between">
         <NavBar />
         <div className="w-full">
           <UploadFile />

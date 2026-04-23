@@ -16,7 +16,7 @@ async function Chat({ params }: { params: { id: string } }) {
   return (
     <>
       <Toaster position="top-right" />
-      <div className="bg-black min-h-screen flex flex-col text-white">
+      <div className="bg-gray-900 min-h-screen flex flex-col text-white">
         <ChatWindow id={id} />
       </div>
     </>
